@@ -1,6 +1,7 @@
 install.packages("tidyverse")
-install.packages("readxls")
+install.packages("readxl")
+library(readxl)
+dataset <- read_excel("C:/Users/carolineferguson/Box/Bigelow/Job Talk paper/Muldrow/muldrow_coding_sheet_v2.xlsx")
 
-summary(muldrow_coding_sheet_v2)
-data_set <- muldrow_coding_sheet_v2
-dim(data_set)
+summary(dataset)
+data_set <- dataset
