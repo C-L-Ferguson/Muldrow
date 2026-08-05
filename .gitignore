@@ -1,0 +1,20 @@
+# Excel working files — export to CSV for version-controlled data
+*.xlsx
+*.xlsm
+*.xls
+
+# Case PDFs — stored in Box, not Git
+Cases/
+
+# R session artifacts
+.RData
+.Rhistory
+.Rproj.user/
+
+# RData files — regenerate from source data + scripts
+*.RData
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
