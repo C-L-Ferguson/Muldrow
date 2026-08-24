@@ -26,7 +26,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 import os
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-INFILE  = "/root/.claude/uploads/39baeedb-fb1d-5fba-9c0a-9a900b672d1e/7eace2fa-muldrow_coding_sheet_cleaned.xlsx"
+INFILE  = "/root/.claude/uploads/39baeedb-fb1d-5fba-9c0a-9a900b672d1e/cf0bb9b3-muldrow_coding_sheet_cleaned.xlsx"
 OUTDIR  = "/home/user/Muldrow"
 XLOUT   = os.path.join(OUTDIR, "muldrow_tables.xlsx")
 MULDROW_DATE = pd.Timestamp("2024-04-17")
@@ -672,72 +672,64 @@ print(f"  Model 1 pseudo-R²={model1.prsquared:.3f}  N={int(model1.nobs)}")
 print(f"  Model 2 pseudo-R²={model2.prsquared:.3f}  N={int(model2.nobs)}")
 
 # ═════════════════════════════════════════════════════════════════════════════
-# STEP 8 — MULTINOMIAL LOGISTIC REGRESSION
+# STEP 8 — BINARY LOGISTIC REGRESSION: CAUSATION vs HARM INSUFFICIENT
 # ═════════════════════════════════════════════════════════════════════════════
-print("── Step 8: Multinomial Logistic Regression ──")
+print("── Step 8: Binary Logit (Causation vs Harm Insufficient) ──")
 
-ws8 = add_sheet("Table 8 — Multinomial Regression")
-ws8.merge_cells("A1:E1")
-ws8["A1"] = "Table 8. Multinomial Logistic Regression: Primary Basis for Dismissal"
+ws8 = add_sheet("Table 8 — Binary Logit")
+ws8.merge_cells("A1:D1")
+ws8["A1"] = "Table 8. Binary Logistic Regression: Causation Insufficient vs. Harm Insufficient"
 ws8["A1"].font = Font(bold=True, size=12, name="Calibri")
 ws8["A1"].alignment = Alignment(horizontal="center")
 
-mdf = df.copy()
-mdf = mdf.dropna(subset=["Primary Basis for Dismissal","Period (Pre/Post)","Circuit",
-                           "Primary Non-Economic Adverse Action","Employer Type",
-                           "Appointing President Party","Motion Type Decided"])
-mdf["post"] = (mdf["Period (Pre/Post)"] == "Post").astype(int)
-mdf["Dismissal_Clean"] = mdf["Primary Basis for Dismissal"].map(DISMISSAL_MAP).fillna("Other")
+bdf = df[df["Dismissal_Clean"].isin(["Causation Insufficient", "Harm Insufficient"])].copy()
+bdf["causation"] = (bdf["Dismissal_Clean"] == "Causation Insufficient").astype(int)
+bdf["post"]      = (bdf["Period (Pre/Post)"] == "Post").astype(int)
+bdf = bdf.dropna(subset=["Circuit", "Employer Type",
+                           "Appointing President Party", "Motion Type Decided"])
+bdf.columns = [re.sub(r"[^A-Za-z0-9_]", "_", c) for c in bdf.columns]
 
-# Clean column names
-mdf.columns = [re.sub(r"[^A-Za-z0-9_]", "_", c) for c in mdf.columns]
-
-mformula = ("Dismissal_Clean ~ post + C(Circuit) + "
-            "C(Primary_Non_Economic_Adverse_Action) + "
+bformula = ("causation ~ post + C(Circuit) + "
             "C(Employer_Type) + "
             "C(Appointing_President_Party) + "
             "C(Motion_Type_Decided)")
 
 try:
-    mmodel = smf.mnlogit(mformula, data=mdf).fit(disp=False, maxiter=300)
+    bmodel = smf.logit(bformula, data=bdf).fit(method="bfgs", maxiter=1000, disp=False)
 
-    for c, h in enumerate(["Variable","Relative Risk Ratio","95% CI","p-value","Outcome Category"], 1):
+    for c, h in enumerate(["Variable", "Odds Ratio", "95% CI", "p-value"], 1):
         cell = ws8.cell(row=2, column=c, value=h)
         cell.fill = HDR_FILL; cell.font = HDR_FONT
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
     r = 3
-    outcomes = [o for o in DISMISSAL_ORDER if o != "Harm Insufficient"]  # ref category
-    for j, outcome in enumerate(outcomes):
-        cell = ws8.cell(row=r, column=1, value=f"Outcome: {outcome}")
-        cell.fill = SUBHDR_FILL
-        cell.font = Font(bold=True, color="FFFFFF", name="Calibri", size=10)
-        for c in range(2, 6):
-            ws8.cell(row=r, column=c).fill = SUBHDR_FILL
+    params = bmodel.params
+    conf   = bmodel.conf_int()
+    pvals  = bmodel.pvalues
+    for i, name in enumerate(params.index):
+        OR    = np.exp(params[name])
+        lo    = np.exp(conf.loc[name, 0])
+        hi    = np.exp(conf.loc[name, 1])
+        p     = pvals[name]
+        stars = sig_label(p)
+        fill  = ALT_FILL if i % 2 == 0 else WHITE_FILL
+        write_row(ws8, r, [name, f"{OR:.3f}", f"[{lo:.3f}, {hi:.3f}]", f"{p:.3f}{stars}"], fill=fill)
         r += 1
-        params_j = mmodel.params.iloc[:, j]
-        conf_j   = mmodel.conf_int().xs(j+1, level=0)  # MNLogit conf_int structure
-        pvals_j  = mmodel.pvalues.iloc[:, j]
-        for i, name in enumerate(params_j.index):
-            RRR  = np.exp(params_j[name])
-            try:
-                lo = np.exp(conf_j.loc[name, "lower"])
-                hi = np.exp(conf_j.loc[name, "upper"])
-                ci = f"[{lo:.3f}, {hi:.3f}]"
-            except Exception:
-                ci = "—"
-            p    = pvals_j[name]
-            stars= sig_label(p)
-            fill = ALT_FILL if i % 2 == 0 else WHITE_FILL
-            write_row(ws8, r, [name, f"{RRR:.3f}", ci, f"{p:.3f}{stars}", outcome], fill=fill)
-            r += 1
 
-    add_note(ws8, r, "Note: Reference category = Harm Insufficient.  Relative risk ratios reported.  * p<0.05  ** p<0.01  *** p<0.001")
+    add_note(ws8, r,
+             f"Note: N={int(bmodel.nobs)}. Outcome=1 if Causation Insufficient, 0 if Harm Insufficient. "
+             "Sample restricted to dismissed cases coded as either Causation Insufficient or Harm Insufficient. "
+             "Reference categories: Circuit=Eighth, Employer=Government-Federal, Party=Democrat, Motion=12(b)(6). "
+             f"Pseudo-R²={bmodel.prsquared:.3f}.  * p<0.05  ** p<0.01  *** p<0.001")
+
+    if "post" in params.index:
+        print(f"  OR_post={np.exp(params['post']):.3f}  p={pvals['post']:.4f}")
+
 except Exception as e:
-    ws8.cell(row=3, column=1, value=f"Model failed to converge: {e}")
-    print(f"  Multinomial model note: {e}")
+    ws8.cell(row=3, column=1, value=f"Model failed: {e}")
+    print(f"  Binary logit error: {e}")
 
-for col_ltr, w in zip(["A","B","C","D","E"], [55,18,22,14,28]):
+for col_ltr, w in zip(["A","B","C","D"], [55,14,22,14]):
     ws8.column_dimensions[col_ltr].width = w
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -856,31 +848,34 @@ ax.yaxis.grid(True, linestyle="--", alpha=0.5, zorder=0)
 ax.set_axisbelow(True)
 save_fig(fig, "fig1_harm_finding_pre_post")
 
-# ── Fig 2: Pre vs Post — Primary Basis for Dismissal ─────────────────────────
-fig, ax = plt.subplots(figsize=(9, 5))
+# ── Fig 2: Pre vs Post — Primary Basis for Dismissal (3 categories) ──────────
+FIG2_CATS = ["Harm Insufficient", "Causation Insufficient", "N/A — Plaintiff Survived"]
+pre_fig2  = pre[pre["Dismissal_Clean"].isin(FIG2_CATS)]
+post_fig2 = post[post["Dismissal_Clean"].isin(FIG2_CATS)]
+
+fig, ax = plt.subplots(figsize=(8, 5))
 counts2 = pd.DataFrame({
-    "Pre":  pre["Dismissal_Clean"].value_counts().reindex(DISMISSAL_ORDER, fill_value=0),
-    "Post": post["Dismissal_Clean"].value_counts().reindex(DISMISSAL_ORDER, fill_value=0),
+    "Pre":  pre_fig2["Dismissal_Clean"].value_counts().reindex(FIG2_CATS, fill_value=0),
+    "Post": post_fig2["Dismissal_Clean"].value_counts().reindex(FIG2_CATS, fill_value=0),
 })
 pcts2 = counts2.div(counts2.sum()) * 100
 
-x2 = np.arange(len(DISMISSAL_ORDER))
-bars_pre2  = ax.bar(x2 - w/2, pcts2["Pre"],  w, label=f"Pre-Period (N={N_pre})",  color=BLUE,   edgecolor="white")
-bars_post2 = ax.bar(x2 + w/2, pcts2["Post"], w, label=f"Post-Period (N={N_post})", color=ORANGE, edgecolor="white")
+x2 = np.arange(len(FIG2_CATS))
+bars_pre2  = ax.bar(x2 - w/2, pcts2["Pre"],  w, label=f"Pre-Period (N={len(pre_fig2)})",  color=BLUE,   edgecolor="white")
+bars_post2 = ax.bar(x2 + w/2, pcts2["Post"], w, label=f"Post-Period (N={len(post_fig2)})", color=ORANGE, edgecolor="white")
 
 for bars in [bars_pre2, bars_post2]:
     for bar in bars:
         h = bar.get_height()
         if h > 2:
             ax.text(bar.get_x() + bar.get_width()/2, h + 0.5, f"{h:.1f}%",
-                    ha="center", va="bottom", fontsize=7.5, fontweight="bold")
+                    ha="center", va="bottom", fontsize=8.5, fontweight="bold")
 
-short_labels = ["Harm\nInsuff.", "Causation\nInsuff.", "N/A —\nSurvived",
-                "Pleading\nDeficiency", "Other"]
+short_labels = ["Harm\nInsuff.", "Causation\nInsuff.", "N/A —\nSurvived"]
 ax.set_xticks(x2)
-ax.set_xticklabels(short_labels, fontsize=9)
+ax.set_xticklabels(short_labels, fontsize=10)
 ax.set_xlabel("Primary Basis for Dismissal", labelpad=6)
-ax.set_ylabel("Percentage of Cases (%)", labelpad=6)
+ax.set_ylabel("Percentage of Cases with Recorded Basis (%)", labelpad=6)
 ax.set_title("Figure 2. Primary Basis for Dismissal: Pre- vs. Post-Muldrow", pad=10)
 ax.set_ylim(0, max(pcts2.values.max() * 1.18, 10))
 ax.legend(frameon=False)
@@ -948,8 +943,9 @@ for xi, (pre_v, post_v, np_, nq_) in enumerate(zip(circ_pre_insuff, circ_post_in
     ax.text(xi - bw/2, pre_v + 1, f"{pre_v:.0f}%\n(N={np_})",  ha="center", fontsize=7.5)
     ax.text(xi + bw/2, post_v+ 1, f"{post_v:.0f}%\n(N={nq_})", ha="center", fontsize=7.5)
 
+circ_labels = [f"First*" if c == "First" else c for c in circuits]
 ax.set_xticks(xc)
-ax.set_xticklabels(circuits, fontsize=9)
+ax.set_xticklabels(circ_labels, fontsize=9)
 ax.set_xlabel("Circuit", labelpad=6)
 ax.set_ylabel("Harm Insufficient Rate (%)", labelpad=6)
 ax.set_title("Figure 4. Harm Insufficient Rate by Circuit: Pre vs. Post Muldrow", pad=10)
@@ -957,41 +953,49 @@ ax.set_ylim(0, 105)
 ax.legend(frameon=False)
 ax.yaxis.grid(True, linestyle="--", alpha=0.5, zorder=0)
 ax.set_axisbelow(True)
+ax.text(0.01, -0.12, "* First Circuit: n=1 pre-period", transform=ax.transAxes,
+        fontsize=8, color="grey", style="italic")
 save_fig(fig, "fig4_circuit_harm_insufficient")
 
-# ── Fig 5: Harm Insufficient Rate by Adverse Action Type ─────────────────────
-fig, ax = plt.subplots(figsize=(11, 5))
+# ── Fig 5: Harm Insufficient Rate by Adverse Action Type (≥10 pre-period) ─────
+col_aa = "Primary Non-Economic Adverse Action"
+# Restrict to categories with ≥10 pre-period cases
+fig5_actions = [act for act in actions_sorted
+                if (pre[col_aa] == act).sum() >= 10]
+
 aa_pre_insuff  = []
 aa_post_insuff = []
 aa_n_pre, aa_n_post = [], []
-for act in actions_sorted:
-    dp = pre[pre["Primary Non-Economic Adverse Action"]  == act]
-    dq = post[post["Primary Non-Economic Adverse Action"] == act]
+for act in fig5_actions:
+    dp = pre[pre[col_aa]  == act]
+    dq = post[post[col_aa] == act]
     aa_n_pre.append(len(dp))
     aa_n_post.append(len(dq))
     aa_pre_insuff.append(100*(dp["Court Finding on Harm"]=="Insufficient").sum()/len(dp) if len(dp) else 0)
     aa_post_insuff.append(100*(dq["Court Finding on Harm"]=="Insufficient").sum()/len(dq) if len(dq) else 0)
 
-xa = np.arange(len(actions_sorted))
+fig, ax = plt.subplots(figsize=(11, 5))
+xa = np.arange(len(fig5_actions))
 bwa = 0.38
 ax.bar(xa - bwa/2, aa_pre_insuff,  bwa, label="Pre-Period",  color=BLUE,   edgecolor="white")
 ax.bar(xa + bwa/2, aa_post_insuff, bwa, label="Post-Period", color=ORANGE, edgecolor="white")
 
-short_aa = [a.replace(" / ", "/\n") for a in actions_sorted]
+short_aa = [a.replace(" / ", "/\n") for a in fig5_actions]
 ax.set_xticks(xa)
-ax.set_xticklabels(short_aa, fontsize=7.5, rotation=25, ha="right")
+ax.set_xticklabels(short_aa, fontsize=11, rotation=45, ha="right")
 ax.set_xlabel("Adverse Action Type", labelpad=6)
 ax.set_ylabel("Harm Insufficient Rate (%)", labelpad=6)
 ax.set_title("Figure 5. Harm Insufficient Rate by Adverse Action Type: Pre vs. Post Muldrow", pad=10)
-ax.set_ylim(0, 110)
+ax.set_ylim(0, 115)
 for xi, (pre_v, post_v, np_, nq_) in enumerate(zip(aa_pre_insuff, aa_post_insuff, aa_n_pre, aa_n_post)):
     if np_ > 0:
-        ax.text(xi - bwa/2, pre_v + 1.5, f"N={np_}", ha="center", fontsize=6.5, color=BLUE)
+        ax.text(xi - bwa/2, pre_v + 1.5, f"N={np_}", ha="center", fontsize=7, color=BLUE)
     if nq_ > 0:
-        ax.text(xi + bwa/2, post_v + 1.5, f"N={nq_}", ha="center", fontsize=6.5, color=ORANGE)
+        ax.text(xi + bwa/2, post_v + 1.5, f"N={nq_}", ha="center", fontsize=7, color=ORANGE)
 ax.legend(frameon=False)
 ax.yaxis.grid(True, linestyle="--", alpha=0.5, zorder=0)
 ax.set_axisbelow(True)
+plt.tight_layout()
 save_fig(fig, "fig5_adverse_action_harm_insufficient")
 
 print("\n═══ All steps complete ═══")
