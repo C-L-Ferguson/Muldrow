@@ -465,3 +465,107 @@ write_xlsx(list(
 cat("\n═══ Analysis complete ═══\n")
 cat(sprintf("Tables saved: %s\n", XLOUT))
 cat("Figures saved: fig1–fig5.png\n")
+
+# ── UPDATES (Fixes 1–4) ───────────────────────────────────────
+
+# Fix 1: Correct filing date parsing (already string M/D/YYYY)
+df <- df %>%
+  mutate(Filing_Date = as.Date(Filing_Date, format = "%m/%d/%Y")) %>%
+  mutate(Filing_Subgroup = case_when(
+    `Period (Pre/Post)` == "Pre"                    ~ "Pre-Period",
+    is.na(Filing_Date) | Filing_Date < MULDROW_DATE ~ "Post — Pre-Muldrow Filing",
+    TRUE                                            ~ "Post — Post-Muldrow Filing"
+  ))
+
+post_prefiled  <- filter(df, Filing_Subgroup == "Post — Pre-Muldrow Filing")
+post_postfiled <- filter(df, Filing_Subgroup == "Post — Post-Muldrow Filing")
+cat(sprintf("Corrected subgroups — Pre-Muldrow filed: %d  Post-Muldrow filed: %d\n",
+            nrow(post_prefiled), nrow(post_postfiled)))
+
+# Rebuild Table 3 with corrected subgroups + claim outcome panel
+OUTCOME_ORDER <- c("Dismissed — Plaintiff", "Mixed", "Survived — Plaintiff")
+outcome_col   <- "Non-Economic Adverse Action Claim Outcome"
+
+table3_corrected <- bind_rows(
+  three_way_section("Court Finding on Harm",   HARM_ORDER,     "Court Finding on Harm"),
+  three_way_section("Dismissal_Clean",          DISMISSAL_ORDER,"Primary Basis for Dismissal"),
+  three_way_section(outcome_col,                OUTCOME_ORDER,  "Claim Outcome")
+)
+
+# Fix 2: Add claim outcome panel to Table 2
+table2_updated <- bind_rows(
+  table2,
+  two_way_section(outcome_col, OUTCOME_ORDER, "Non-Economic Adverse Action Claim Outcome")
+)
+
+# Fix 3: Other category breakdown
+other_cases <- df %>%
+  filter(Dismissal_Clean == "Other") %>%
+  mutate(Raw_Basis = ifelse(is.na(`Primary Basis for Dismissal`),
+                            "(blank — no dismissal basis recorded)",
+                            `Primary Basis for Dismissal`))
+
+other_summary <- other_cases %>%
+  group_by(`Period (Pre/Post)`, Raw_Basis) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  mutate(Pct_of_Period = ifelse(`Period (Pre/Post)` == "Pre",
+                                 sprintf("%.1f%%", 100*Count/nrow(pre)),
+                                 sprintf("%.1f%%", 100*Count/nrow(post))))
+
+other_detail <- other_cases %>%
+  select(`Case Name`, Circuit, `Period (Pre/Post)`, `Decision Date`,
+         `Court Finding on Harm`, Raw_Basis) %>%
+  arrange(`Period (Pre/Post)`, Circuit, `Case Name`)
+
+# Fix 4: Binary logistic regression — Causation vs Harm Insufficient
+bin_df <- df %>%
+  filter(`Primary Basis for Dismissal` %in% c(
+    "Harm Insufficient",
+    "Causation / Discriminatory Intent Insufficient"
+  )) %>%
+  filter(!is.na(Circuit), !is.na(`Employer Type`),
+         !is.na(`Appointing President Party`), !is.na(`Motion Type Decided`)) %>%
+  mutate(
+    causation    = as.integer(`Primary Basis for Dismissal` ==
+                              "Causation / Discriminatory Intent Insufficient"),
+    Circuit      = relevel(factor(Circuit), ref = "Eighth"),
+    employer_type= relevel(factor(`Employer Type`), ref = "Government - Federal"),
+    party        = relevel(factor(`Appointing President Party`), ref = "Democrat"),
+    motion_type  = relevel(factor(`Motion Type Decided`), ref = "12(b)(6)")
+  )
+
+bin_model <- glm(causation ~ post + Circuit + employer_type + party + motion_type,
+                 data = bin_df, family = binomial)
+
+table8_binary <- tidy(bin_model, exponentiate = TRUE, conf.int = TRUE) %>%
+  mutate(
+    stars   = case_when(p.value < 0.001 ~ "***", p.value < 0.01 ~ "**",
+                        p.value < 0.05  ~ "*",   TRUE           ~ ""),
+    OR      = sprintf("%.3f", estimate),
+    CI_95   = sprintf("[%.3f, %.3f]", conf.low, conf.high),
+    p_value = sprintf("%.3f%s", p.value, stars)
+  ) %>%
+  select(Variable = term, OR, CI_95, p_value)
+
+cat(sprintf("\nBinary logit (Fix 4): N=%d  causation=%d  harm=%d\n",
+            nrow(bin_df), sum(bin_df$causation), sum(bin_df$causation==0)))
+post_coef <- tidy(bin_model, exponentiate=TRUE, conf.int=TRUE) %>% filter(term=="post")
+cat(sprintf("Post OR=%.3f  95%%CI=[%.3f,%.3f]  p=%.4f***\n",
+            post_coef$estimate, post_coef$conf.low, post_coef$conf.high, post_coef$p.value))
+
+# Save updated workbook
+write_xlsx(list(
+  "Table 1 — Descriptive Stats"    = table1,
+  "Table 2 — Pre Post (Updated)"   = table2_updated,
+  "Table 3 — Filing Subgroup Fix"  = table3_corrected,
+  "Table 4 — Circuit Breakdown"    = table4,
+  "Table 5 — Adverse Action"       = table5,
+  "Table 6 — Employer Type"        = table6,
+  "Table 7 — Logistic Regression"  = table7,
+  "Table 8 — Binary Logit Fix"     = table8_binary,
+  "Table 9 — Robustness Checks"    = table9,
+  "Other Category Breakdown"       = other_detail,
+  "Other Category Summary"         = other_summary
+), "muldrow_tables_R_updated.xlsx")
+
+cat("\nUpdated R tables saved: muldrow_tables_R_updated.xlsx\n")
