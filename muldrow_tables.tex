@@ -1,0 +1,356 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{lscape}
+\usepackage{caption}
+\captionsetup{labelfont=bf, font=small, justification=justified, singlelinecheck=false}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\begin{document}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Sample Characteristics by Period}
+  \label{tab:descriptive}
+  \begin{threeparttable}
+  \begin{tabular}{L{5.5cm} C{3cm} C{2.5cm} C{2.8cm}}
+    \toprule
+    \textbf{Characteristic} & \textbf{Full Sample (N=386)} & \textbf{Pre-Period (N=130)} & \textbf{Post-Period (N=256)} \\
+    \midrule
+    \multicolumn{4}{l}{\textit{Circuit}} \\
+    \midrule
+    \hspace{1em}First & 6 (1.6\\%) & 1 (0.8\\%) & 5 (2.0\\%) \\
+    \hspace{1em}Second & 117 (30.3\\%) & 53 (40.8\\%) & 64 (25.0\\%) \\
+    \hspace{1em}Fourth & 87 (22.5\\%) & 32 (24.6\\%) & 55 (21.5\\%) \\
+    \hspace{1em}Seventh & 45 (11.7\\%) & 19 (14.6\\%) & 26 (10.2\\%) \\
+    \hspace{1em}Eighth & 35 (9.1\\%) & 11 (8.5\\%) & 24 (9.4\\%) \\
+    \hspace{1em}Tenth & 47 (12.2\\%) & 8 (6.2\\%) & 39 (15.2\\%) \\
+    \hspace{1em}Eleventh & 49 (12.7\\%) & 6 (4.6\\%) & 43 (16.8\\%) \\
+    \multicolumn{4}{l}{\textit{Primary Adverse Action}} \\
+    \midrule
+    \hspace{1em}Exclusion from Opportunities & 62 (16.1\\%) & 17 (13.1\\%) & 45 (17.6\\%) \\
+    \hspace{1em}Heightened Surveillance & 17 (4.4\\%) & 12 (9.2\\%) & 5 (2.0\\%) \\
+    \hspace{1em}Increased Workload & 5 (1.3\\%) & 2 (1.5\\%) & 3 (1.2\\%) \\
+    \hspace{1em}Involuntary Leave & 10 (2.6\\%) & 1 (0.8\\%) & 9 (3.5\\%) \\
+    \hspace{1em}Lateral Transfer & 37 (9.6\\%) & 15 (11.5\\%) & 22 (8.6\\%) \\
+    \hspace{1em}Loss of Perks or Benefits & 47 (12.2\\%) & 20 (15.4\\%) & 27 (10.5\\%) \\
+    \hspace{1em}Loss of Position & 14 (3.6\\%) & 3 (2.3\\%) & 11 (4.3\\%) \\
+    \hspace{1em}Miscategorization & 2 (0.5\\%) & 1 (0.8\\%) & 1 (0.4\\%) \\
+    \hspace{1em}Negative Evaluation & 69 (17.9\\%) & 25 (19.2\\%) & 44 (17.2\\%) \\
+    \hspace{1em}Other & 43 (11.1\\%) & 3 (2.3\\%) & 40 (15.6\\%) \\
+    \hspace{1em}Reassignment / Duty Change & 52 (13.5\\%) & 21 (16.2\\%) & 31 (12.1\\%) \\
+    \hspace{1em}Unreasonable Workload & 22 (5.7\\%) & 8 (6.2\\%) & 14 (5.5\\%) \\
+    \hspace{1em}Workspace Change & 6 (1.6\\%) & 2 (1.5\\%) & 4 (1.6\\%) \\
+    \multicolumn{4}{l}{\textit{Employer Type}} \\
+    \midrule
+    \hspace{1em}Government - Federal & 56 (14.5\\%) & 26 (20.0\\%) & 30 (11.7\\%) \\
+    \hspace{1em}Government - Municipal & 128 (33.2\\%) & 60 (46.2\\%) & 68 (26.6\\%) \\
+    \hspace{1em}Government - State & 33 (8.5\\%) & 7 (5.4\\%) & 26 (10.2\\%) \\
+    \hspace{1em}Private & 169 (43.8\\%) & 37 (28.5\\%) & 132 (51.6\\%) \\
+    \multicolumn{4}{l}{\textit{Protected Characteristic}} \\
+    \midrule
+    \hspace{1em}Multiple & 138 (35.8\\%) & 41 (31.5\\%) & 97 (37.9\\%) \\
+    \hspace{1em}National Origin & 7 (1.8\\%) & 1 (0.8\\%) & 6 (2.3\\%) \\
+    \hspace{1em}Race & 136 (35.2\\%) & 54 (41.5\\%) & 82 (32.0\\%) \\
+    \hspace{1em}Religion & 15 (3.9\\%) & 3 (2.3\\%) & 12 (4.7\\%) \\
+    \hspace{1em}Sex & 90 (23.3\\%) & 31 (23.8\\%) & 59 (23.0\\%) \\
+    \multicolumn{4}{l}{\textit{Appointing President Party}} \\
+    \midrule
+    \hspace{1em}Democrat & 217 (56.2\\%) & 74 (56.9\\%) & 143 (55.9\\%) \\
+    \hspace{1em}Republican & 134 (34.7\\%) & 47 (36.2\\%) & 87 (34.0\\%) \\
+    \multicolumn{4}{l}{\textit{Motion Type}} \\
+    \midrule
+    \hspace{1em}12(b)(6) & 162 (42.0\\%) & 46 (35.4\\%) & 116 (45.3\\%) \\
+    \hspace{1em}Other & 9 (2.3\\%) & 1 (0.8\\%) & 8 (3.1\\%) \\
+    \hspace{1em}Summary Judgment & 215 (55.7\\%) & 83 (63.8\\%) & 132 (51.6\\%) \\
+    \multicolumn{4}{l}{\textit{Court Finding on Harm}} \\
+    \midrule
+    \hspace{1em}Insufficient & 179 (46.4\\%) & 96 (73.8\\%) & 83 (32.4\\%) \\
+    \hspace{1em}Sufficient & 117 (30.3\\%) & 14 (10.8\\%) & 103 (40.2\\%) \\
+    \hspace{1em}Mixed & 48 (12.4\\%) & 17 (13.1\\%) & 31 (12.1\\%) \\
+    \hspace{1em}Not Reached & 42 (10.9\\%) & 3 (2.3\\%) & 39 (15.2\\%) \\
+    \multicolumn{4}{l}{\textit{Primary Basis for Dismissal}} \\
+    \midrule
+    \hspace{1em}Harm Insufficient & 174 (45.1\\%) & 91 (70.0\\%) & 83 (32.4\\%) \\
+    \hspace{1em}Causation Insufficient & 115 (29.8\\%) & 22 (16.9\\%) & 93 (36.3\\%) \\
+    \hspace{1em}N/A --- Plaintiff Survived & 87 (22.5\\%) & 11 (8.5\\%) & 76 (29.7\\%) \\
+    \hspace{1em}Pleading Deficiency & 4 (1.0\\%) & 4 (3.1\\%) & 0 (0.0\\%) \\
+    \hspace{1em}Other & 6 (1.6\\%) & 2 (1.5\\%) & 4 (1.6\\%) \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} Counts with column percentages in parentheses. Percentages may not sum to 100 due to rounding.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Pre- vs.\ Post-Muldrow Comparison on Outcome Variables}
+  \label{tab:prepost}
+  \begin{threeparttable}
+  \begin{tabular}{L{5.5cm} C{1.4cm} C{1.4cm} C{1.6cm} C{1.6cm} C{2cm}}
+    \toprule
+    \textbf{Outcome} & \textbf{Pre N (N=130)} & \textbf{Pre \\%} & \textbf{Post N (N=256)} & \textbf{Post \\%} & \textbf{\$\chi^2\$ \$p\$-value} \\
+    \midrule
+    \multicolumn{6}{l}{\textit{Panel A: Court Finding on Harm}} \\
+    \midrule
+    \hspace{1em}Insufficient & 96 & 73.8\\% & 83 & 32.4\\% & 0.000*** \\
+    \hspace{1em}Sufficient & 14 & 10.8\\% & 103 & 40.2\\% &  \\
+    \hspace{1em}Mixed & 17 & 13.1\\% & 31 & 12.1\\% &  \\
+    \hspace{1em}Not Reached & 3 & 2.3\\% & 39 & 15.2\\% &  \\
+    \multicolumn{6}{l}{\textit{Panel B: Primary Basis for Dismissal}} \\
+    \midrule
+    \hspace{1em}Harm Insufficient & 91 & 70.0\\% & 83 & 32.4\\% & 0.000*** \\
+    \hspace{1em}Causation Insufficient & 22 & 16.9\\% & 93 & 36.3\\% &  \\
+    \hspace{1em}N/A --- Plaintiff Survived & 11 & 8.5\\% & 76 & 29.7\\% &  \\
+    \hspace{1em}Pleading Deficiency & 4 & 3.1\\% & 0 & 0.0\\% &  \\
+    \hspace{1em}Other & 2 & 1.5\\% & 4 & 1.6\\% &  \\
+    \multicolumn{6}{l}{\textit{Panel C: Claim Outcome}} \\
+    \midrule
+    \hspace{1em}Dismissed --- Plaintiff & 0 & 0.0\\% & 0 & 0.0\\% & 0.000*** \\
+    \hspace{1em}Mixed & 1 & 0.8\\% & 13 & 5.1\\% &  \\
+    \hspace{1em}Survived --- Plaintiff & 0 & 0.0\\% & 0 & 0.0\\% &  \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} $\chi^2$ tests use Pearson chi-square without continuity correction. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{landscape}
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \caption{Outcome by Period and Filing Date Subgroup}
+  \label{tab:filing}
+  \begin{threeparttable}
+  \begin{tabular}{L{4.2cm} C{1.1cm} C{1.1cm} C{1.5cm} C{1.3cm} C{1.7cm} C{1.3cm} C{1.7cm}}
+    \toprule
+    \textbf{Outcome} & \textbf{Pre N=130} & \textbf{Pre \\%\%} & \textbf{Post Pre-Filed N=168} & \textbf{\\%\%} & \textbf{Post Post-Filed N=88} & \textbf{\\%\%} & \textbf{\$\chi^2\$ \$p\$} \\
+    \midrule
+    \multicolumn{8}{l}{\textit{Panel A: Court Finding on Harm}} \\
+    \midrule
+    \hspace{1em}Insufficient & 96 & 73.8\% & 61 & 36.3\% & 22 & 25.0\% & 0.000*** \\
+    \hspace{1em}Sufficient & 14 & 10.8\% & 61 & 36.3\% & 42 & 47.7\% &  \\
+    \hspace{1em}Mixed & 17 & 13.1\% & 19 & 11.3\% & 12 & 13.6\% &  \\
+    \hspace{1em}Not Reached & 3 & 2.3\% & 27 & 16.1\% & 12 & 13.6\% &  \\
+    \multicolumn{8}{l}{\textit{Panel B: Primary Basis for Dismissal}} \\
+    \midrule
+    \hspace{1em}Harm Insufficient & 91 & 70.0\% & 61 & 36.3\% & 22 & 25.0\% & 0.000*** \\
+    \hspace{1em}Causation Insufficient & 22 & 16.9\% & 67 & 39.9\% & 26 & 29.5\% &  \\
+    \hspace{1em}N/A --- Plaintiff Survived & 11 & 8.5\% & 38 & 22.6\% & 38 & 43.2\% &  \\
+    \hspace{1em}Pleading Deficiency & 4 & 3.1\% & 0 & 0.0\% & 0 & 0.0\% &  \\
+    \hspace{1em}Other & 2 & 1.5\% & 2 & 1.2\% & 2 & 2.3\% &  \\
+    \multicolumn{8}{l}{\textit{Panel C: Claim Outcome}} \\
+    \midrule
+    \hspace{1em}Dismissed --- Plaintiff & 0 & 0.0\% & 0 & 0.0\% & 0 & 0.0\% & 0.000*** \\
+    \hspace{1em}Mixed & 1 & 0.8\% & 6 & 3.6\% & 7 & 8.0\% &  \\
+    \hspace{1em}Survived --- Plaintiff & 0 & 0.0\% & 0 & 0.0\% & 0 & 0.0\% &  \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} Post Pre-Filed = post-period cases filed before April~17, 2024. Post Post-Filed = post-period cases filed on or after April~17, 2024. $\chi^2$ test is across all three groups. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\end{landscape}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Court Finding on Harm by Circuit --- Pre vs.\ Post-Muldrow}
+  \label{tab:circuit}
+  \begin{threeparttable}
+  \begin{tabular}{L{2.4cm} C{1.1cm} C{1.8cm} C{1.1cm} C{1.8cm} C{1.8cm} C{2.2cm} C{2cm}}
+    \toprule
+    \textbf{Circuit} & \textbf{Pre N} & \textbf{Pre Insuff.} & \textbf{Post N} & \textbf{Post Insuff.} & \textbf{Post Suff.} & \textbf{Post Not Reached} & \textbf{\$\chi^2\$ \$p\$} \\
+    \midrule
+    First$^*$ & 1 & 100.0\% & 5 & 20.0\% & 80.0\% & 0.0\% & 0.121 \\
+    Second & 53 & 66.0\% & 64 & 32.8\% & 46.9\% & 6.2\% & 0.002** \\
+    Fourth & 32 & 84.4\% & 55 & 34.5\% & 34.5\% & 18.2\% & 0.000*** \\
+    Seventh & 19 & 68.4\% & 26 & 23.1\% & 46.2\% & 15.4\% & 0.002** \\
+    Eighth & 11 & 90.9\% & 24 & 33.3\% & 41.7\% & 12.5\% & 0.017* \\
+    Tenth & 8 & 75.0\% & 39 & 41.0\% & 35.9\% & 20.5\% & 0.114 \\
+    Eleventh & 6 & 66.7\% & 43 & 27.9\% & 32.6\% & 23.3\% & 0.235 \\
+    \midrule
+    \textbf{All Circuits} & \textbf{130} & \textbf{73.8\%} & \textbf{256} & \textbf{32.4\%} & \textbf{40.2\%} & \textbf{15.2\%} & \textbf{0.000***} \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} $\chi^2$ tests compare pre vs.\ post within each circuit. $^*$First Circuit: $n=1$ pre-period. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Court Finding on Harm by Adverse Action Type}
+  \label{tab:adverse}
+  \begin{threeparttable}
+  \begin{tabular}{L{5.5cm} C{1.2cm} C{2cm} C{1.2cm} C{2cm} C{2cm}}
+    \toprule
+    \textbf{Adverse Action Type} & \textbf{Pre N} & \textbf{Pre Insuff.} & \textbf{Post N} & \textbf{Post Insuff.} & \textbf{\$\chi^2\$ \$p\$} \\
+    \midrule
+    Exclusion from Opportunities & 17 & 82.4\% & 45 & 26.7\% & 0.000*** \\
+    Heightened Surveillance & 12 & 75.0\% & 5 & 80.0\% & 0.160 \\
+    Increased Workload & 2 & 100.0\% & 3 & 33.3\% & 0.136 \\
+    Involuntary Leave & 1 & 0.0\% & 9 & 44.4\% & 0.574 \\
+    Lateral Transfer & 15 & 60.0\% & 22 & 45.5\% & 0.458 \\
+    Loss of Perks or Benefits & 20 & 75.0\% & 27 & 25.9\% & 0.010** \\
+    Loss of Position & 3 & 33.3\% & 11 & 9.1\% & 0.548 \\
+    Miscategorization & 1 & 0.0\% & 1 & 0.0\% & --- \\
+    Negative Evaluation & 25 & 76.0\% & 44 & 34.1\% & 0.003** \\
+    Other & 3 & 100.0\% & 40 & 47.5\% & 0.380 \\
+    Reassignment / Duty Change & 21 & 81.0\% & 31 & 12.9\% & 0.000*** \\
+    Unreasonable Workload & 8 & 62.5\% & 14 & 28.6\% & 0.121 \\
+    Workspace Change & 2 & 100.0\% & 4 & 50.0\% & 0.221 \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} $\chi^2$ tests compare pre vs.\ post within each adverse action type. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Court Finding on Harm by Employer Type}
+  \label{tab:employer}
+  \begin{threeparttable}
+  \begin{tabular}{L{5cm} C{1.2cm} C{2cm} C{1.2cm} C{2cm} C{2cm}}
+    \toprule
+    \textbf{Employer Type} & \textbf{Pre N} & \textbf{Pre Insuff.} & \textbf{Post N} & \textbf{Post Insuff.} & \textbf{\$\chi^2\$ \$p\$} \\
+    \midrule
+    Government - Federal & 26 & 84.6\% & 30 & 33.3\% & 0.001** \\
+    Government - Municipal & 60 & 66.7\% & 68 & 23.5\% & 0.000*** \\
+    Government - State & 7 & 71.4\% & 26 & 26.9\% & 0.152 \\
+    Private & 37 & 78.4\% & 132 & 37.9\% & 0.000*** \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} $\chi^2$ tests compare pre vs.\ post within each employer type. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Logistic Regression: Predictors of Harm Insufficient Finding}
+  \label{tab:logit}
+  \begin{threeparttable}
+  \begin{tabular}{L{7.5cm} C{1.8cm} C{2.5cm} C{2cm}}
+    \toprule
+    & \multicolumn{3}{c}{\textbf{Outcome: Harm Insufficient (1=Yes)}} \\
+    \cmidrule(lr){2-4}
+    & \textbf{Odds Ratio} & \textbf{95\% CI} & \textbf{$p$-value} \\
+    \midrule
+    \multicolumn{4}{l}{\textit{Specification 1 --- Base Model ($N=351$, Pseudo-$R^2=0.170$)}} \\
+    \midrule
+    \textbf{Post-Period (vs.\ Pre)} & \textbf{0.137} & \textbf{[0.076, 0.249]} & \textbf{0.000***} \\
+    \quad\textit{Circuit controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \quad\textit{Adverse action controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \quad\textit{Employer, party, motion controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \midrule
+    \multicolumn{4}{l}{\textit{Specification 2 --- With Filing Subgroup ($N=351$, Pseudo-$R^2=0.175$)}} \\
+    \midrule
+    \textbf{Post-Period (vs.\ Pre)} & \textbf{0.154} & \textbf{[0.083, 0.284]} & \textbf{0.000***} \\
+    \textbf{Post -- Post-Muldrow Filing (vs.\ Pre)} & \textbf{0.570} & \textbf{[0.274, 1.186]} & \textbf{0.133} \\
+    \quad\textit{Circuit controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \quad\textit{Adverse action controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \quad\textit{Employer, party, motion controls} & \multicolumn{3}{c}{\textit{Included}} \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} Logistic regression; outcome = 1 if court found harm insufficient. Reference categories: Circuit = Eighth; Adverse Action = Exclusion from Opportunities; Employer = Government--Federal; Party = Democrat; Motion = 12(b)(6). Control variable coefficients suppressed; full results available upon request. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Binary Logistic Regression: Causation Insufficient vs.\ Harm Insufficient}
+  \label{tab:binary}
+  \begin{threeparttable}
+  \begin{tabular}{L{7.5cm} C{1.8cm} C{2.5cm} C{2cm}}
+    \toprule
+    \textbf{Variable} & \textbf{Odds Ratio} & \textbf{95\\% CI} & \textbf{\$p\$-value} \\
+    \midrule
+    Intercept & 0.162 & [0.044, 0.589] & 0.006** \\
+    C(Circuit)[T.Eleventh] & 1.463 & [0.430, 4.970] & 0.542 \\
+    C(Circuit)[T.First] & 0.961 & [0.051, 18.264] & 0.979 \\
+    C(Circuit)[T.Fourth] & 1.329 & [0.429, 4.115] & 0.622 \\
+    C(Circuit)[T.Second] & 1.127 & [0.379, 3.353] & 0.830 \\
+    C(Circuit)[T.Seventh] & 1.410 & [0.422, 4.717] & 0.577 \\
+    C(Circuit)[T.Tenth] & 0.792 & [0.217, 2.892] & 0.724 \\
+    C(Employer Type)[T.Government - Municipal] & 1.066 & [0.462, 2.460] & 0.881 \\
+    C(Employer Type)[T.Government - State] & 1.897 & [0.640, 5.622] & 0.248 \\
+    C(Employer Type)[T.Private] & 0.872 & [0.402, 1.893] & 0.730 \\
+    C(Appointing President Party)[T.Republican] & 0.844 & [0.469, 1.520] & 0.572 \\
+    C(Motion Type Decided)[T.Other] & 0.000 & [0.000, 99163269519826168580160855086842037795340783729613318445384622935127959566086632103095549558784.000] & 0.933 \\
+    C(Motion Type Decided)[T.Summary Judgment] & 1.500 & [0.814, 2.762] & 0.193 \\
+    \textbf{Post-Period (vs.\ Pre)} & \textbf{4.606} & \textbf{[2.485, 8.538]} & \textbf{0.000***} \\
+    \midrule
+    $N$ & \multicolumn{3}{c}{263} \\
+    Pseudo-$R^2$ & \multicolumn{3}{c}{0.107} \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} Sample restricted to dismissed cases coded as Causation Insufficient or Harm Insufficient ($N=263$). Outcome = 1 if Causation Insufficient, 0 if Harm Insufficient. Reference categories: Circuit = Eighth; Employer = Government--Federal; Party = Democrat; Motion = 12(b)(6). * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+% -----------------------------------------------------------
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Robustness Checks --- Core Pre/Post Comparison on Restricted Samples}
+  \label{tab:robust}
+  \begin{threeparttable}
+  \begin{tabular}{L{5cm} C{1cm} C{1.7cm} C{1cm} C{1.7cm} C{1.7cm} C{1.7cm} C{2cm}}
+    \toprule
+    \textbf{Sample Restriction} & \textbf{Pre N} & \textbf{Pre Insuff.} & \textbf{Post N} & \textbf{Post Insuff.} & \textbf{Pre Surv.} & \textbf{Post Surv.} & \textbf{\$\chi^2\$ \$p\$} \\
+    \midrule
+    Full sample (baseline) & 130 & 73.8\% & 256 & 32.4\% & 8.5\% & 29.7\% & 0.000*** \\
+    Excl.\ Uncertain confidence & 129 & 73.6\% & 256 & 32.4\% & 8.5\% & 29.7\% & 0.000*** \\
+    Excl.\ Multiple Bases & 130 & 73.8\% & 256 & 32.4\% & 8.5\% & 29.7\% & 0.000*** \\
+    Excl.\ Fourth Circuit & 98 & 70.4\% & 201 & 31.8\% & 11.2\% & 31.3\% & 0.000*** \\
+    Post -- post-Muldrow filing only & 130 & 73.8\% & 88 & 25.0\% & 8.5\% & 43.2\% & 0.000*** \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}[flushleft]
+    \footnotesize
+    \item \textit{Note:} $\chi^2$ tests compare Court Finding on Harm across all categories, Pre vs.\ Post. * $p<0.05$; ** $p<0.01$; *** $p<0.001$.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\end{document}
