@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage[margin=1in]{geometry}
+\usepackage{pdflscape}
 \usepackage{booktabs}
 \usepackage{threeparttable}
 \usepackage{multirow}
@@ -12,13 +13,16 @@
 \begin{document}
 
 % -----------------------------------------------------------
-\begin{table}[htbp]
+\newgeometry{margin=0.6in}
+\begin{landscape}
+\begin{table}[p]
   \centering
-  \small
+  \scriptsize
+  \setlength{\arraystretch}{0.82}
   \caption{Sample Characteristics by Period}
   \label{tab:descriptive}
   \begin{threeparttable}
-  \begin{tabular}{L{5.5cm} C{3cm} C{2.5cm} C{2.8cm}}
+  \begin{tabular}{L{6cm} C{4cm} C{3.5cm} C{3.8cm}}
     \toprule
     \textbf{Characteristic} & \textbf{Full Sample (N=386)} & \textbf{Pre-Period (N=130)} & \textbf{Post-Period (N=256)} \\
     \midrule
@@ -89,6 +93,8 @@
   \end{tablenotes}
   \end{threeparttable}
 \end{table}
+\end{landscape}
+\restoregeometry
 
 % -----------------------------------------------------------
 \begin{table}[htbp]
