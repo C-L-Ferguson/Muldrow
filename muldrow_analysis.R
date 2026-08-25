@@ -21,6 +21,7 @@ DISMISSAL_MAP <- c(
   "Harm Insufficient"                              = "Harm Insufficient",
   "Causation / Discriminatory Intent Insufficient" = "Causation Insufficient",
   "N/A — Plaintiff Survived"                       = "N/A — Plaintiff Survived",
+  "N/A - Plaintiff Survived"                       = "N/A — Plaintiff Survived",  # hyphen variant
   "Pleading Deficiency"                            = "Pleading Deficiency",
   "Procedural / Forfeiture"                        = "Other",
   "Multiple Bases"                                 = "Other",
