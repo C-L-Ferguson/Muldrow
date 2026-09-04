@@ -1,15 +1,16 @@
 library(tidyverse)
-library(readr)
+library(readxl)
 library(fixest)    # for regressions with fixed effects
 library(modelsummary)  # for regression tables
 
 # ---------------------------------------------------------------------------
 # Load data
 # ---------------------------------------------------------------------------
-# Export the Coding Sheet tab from muldrow_coding_sheet_v2.xlsx as
-# data/coding_sheet.csv (row 1 = section headers, row 2 = column names)
-dataset <- read_csv(
-  here::here("data", "coding_sheet.csv"),
+# Row 1 in the Coding Sheet tab is a section-header row; row 2 has column names.
+# Change skip = 1 to skip = 0 if row 1 already contains your column names.
+dataset <- read_excel(
+  "C:/Users/carol/Box/Bigelow/Job_Talk_paper/Muldrow/muldrow_coding_sheet_cleaned.xlsx",
+  sheet = "Coding Sheet",
   skip = 1
 )
 
